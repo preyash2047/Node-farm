@@ -74,3 +74,11 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+.vs
+
+node_modules
+
+.prettierrc
+
+package-lock.json

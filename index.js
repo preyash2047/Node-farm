@@ -1,6 +1,22 @@
 const fs = require('fs');
 const http = require("http");
 const url = require("url");
+const slugify = require("slugify");
+const replaceTemplate = require("./modules/replaceTemplate");
+
+////////////////////////////////////////////////////
+//COMMANDS
+/*
+nodemon
+npm run start
+npm run
+change "start" script in package.json
+to install developer dependency
+npm i packageName --save-dev
+to install global package
+
+*/
+
 
 ////////////////////////////////////
 //File Handeling
@@ -36,24 +52,15 @@ console.log("Reading File");
 //SERVER
 
 //reading file
-const tempOverview = fs.readFileSync(`${__dirname}/final/templates/template-overview.html`, "utf-8");
-const tempCard = fs.readFileSync(`${__dirname}/final/templates/template-card.html`, "utf-8");
-const tempProduct = fs.readFileSync(`${__dirname}/final/templates/template-product.html`, "utf-8");
-const Data = fs.readFileSync(`${__dirname}/final/dev-data/data.json`, "utf-8");
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, "utf-8");
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, "utf-8");
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, "utf-8");
+const Data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(Data);
 
-const replaceTemplate = (temp, product) => {
-    let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
-    output = output.replace(/{%IMAGE%}/g, product.image);
-    output = output.replace(/{%PRICE%}/g, product.price);
-    output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
-    output = output.replace(/{%QUANTITY%}/g, product.quantity);
-    output = output.replace(/{%DESCRIPTION%}/g, product.description);
-    output = output.replace(/{%ID%}/g, product.id);
-    
-    if (!product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
-    return output;
-}
+const slugs = dataObj.map(el => slugify(el.productName), {lower:true});
+console.log(slugs);
+console.log(slugify('Fresh Avocodo', {lower:true}));
 
 http.createServer((req, res)=>{
     const {query, pathname} = url.parse(req.url, true);
